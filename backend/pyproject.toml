@@ -1,0 +1,9 @@
+[project]
+name = "matching-backend"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "django>=5.0,<6",
+    "django-cors-headers>=4.3",
+    "djangorestframework>=3.15",
+]
