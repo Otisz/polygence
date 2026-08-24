@@ -12,3 +12,6 @@ frontend/dist/
 .pytest_cache/
 .coverage
 htmlcov/
+.idea
+backend/.uv-cache/
+backend/.venv/

@@ -47,6 +47,36 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
+### Docker
+
+Requires Docker with the Compose plugin. Builds both services and starts them
+with hot reload; the source tree is bind-mounted, so edits on the host apply
+straight away.
+
+```bash
+docker compose up --build
+```
+
+**`migrate` is required on first boot** — the containers start before any
+database exists, and every page returns a "no such table" error until you run
+it:
+
+```bash
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py seed_proposal
+docker compose exec backend python manage.py createsuperuser # optional, for /admin
+```
+
+Same URLs as the bare-metal setup. Tests:
+
+```bash
+docker compose exec backend python manage.py test matching
+```
+
+Override the published ports with `FORWARD_FE_PORT` / `FORWARD_BE_PORT`, and
+the container user with `APP_UID` / `APP_GID`.
+
+
 ## Useful surfaces
 
 | Surface | URL |
