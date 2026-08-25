@@ -42,6 +42,47 @@ def review_student(request, current):
 
     return Response(data={"message": "Method Not Allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+@api_view(["POST", "PATCH"])
+@authentication_classes([])
+@permission_classes([])
+def review_student_v2(request, current):
+    student_proposal: StudentProposal | None = StudentProposalService.get_by_uuid(current)
+
+    if not student_proposal:
+        return Response({"error": "Student proposal not found"}, 400)
+
+    response = request.data.get("response")
+
+    if request.method == "POST":
+
+        if not response:
+            return Response({"error": "Missing response"}, 400)
+
+        if response not in {StudentProposal.ACCEPT, StudentProposal.REJECT}:
+            return Response({"error": "Unsupported response"}, 400)
+
+        if "value" in student_proposal.response:
+            return Response({"error": "Response already recorded"}, 400)
+
+        StudentProposalService.update_response(student_proposal, response)
+        return Response({"message": "Response recorded", "success": True})
+
+    if request.method == "PATCH":
+        reason = request.data.get("reason")
+        match_rating = request.data.get("match_rating")
+
+        if "reason" in student_proposal.response:
+            return Response({"error": "Reason already recorded"}, 400)
+
+        StudentProposalService.update_response(student_proposal, response)
+
+        if response == StudentProposal.ACCEPT:
+            StudentProposalService.update_reason_and_rating(student_proposal, None, match_rating)
+        else:
+            StudentProposalService.update_reason_and_rating(student_proposal, reason, None)
+        return Response({"message": "Reason recorded", "success": True})
+
+    return Response(data={"message": "Method Not Allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 @api_view(["GET"])
 @authentication_classes([])

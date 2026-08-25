@@ -28,15 +28,16 @@ async function request(path, options = {}) {
 export const getProposalActive = (uuid) => request(`/proposal-active/${uuid}/`);
 
 export const updateReviewStudent = (uuid, payload) =>
-  request(`/review-student/${uuid}/`, {
+  request(`/review-student/${uuid}/v2/`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
 
 export const partialUpdateReviewStudent = (uuid, _response, payload) =>
-  request(`/review-student/${uuid}/`, {
+  request(`/review-student/${uuid}/v2/`, {
     method: "PATCH",
     body: JSON.stringify({
+      response: _response,
       reason: payload?.reason,
       match_rating: payload?.matchRating,
     }),

@@ -24,7 +24,7 @@ export function FeedbackForm({ uuid, response, updateResponse }) {
       reason: response === REJECT ? reason : {},
     };
 
-    updateResponse(uuid, undefined, payload)
+    updateResponse(uuid, response, payload)
       .then(() => setResponseRecorded(true))
       .catch(() => setError(true))
       .finally(() => setLoading(false));
@@ -34,19 +34,13 @@ export function FeedbackForm({ uuid, response, updateResponse }) {
     <>
       {loading && <p>Saving…</p>}
       {error && (
-        <div className="alert alert-danger">
-          Something went wrong. Please contact us at mentors@example.com.
-        </div>
+        <div className="alert alert-danger">Something went wrong. Please contact us at mentors@example.com.</div>
       )}
       {responseRecorded && <p>Thank you!</p>}
       {!loading && !responseRecorded && !error && (
         <form onSubmit={handleSubmit} className="feedback-form">
-          {response === ACCEPT && (
-            <MatchRatingField matchRating={matchRating} setMatchRating={setMatchRating} />
-          )}
-          {response === REJECT && (
-            <RejectFormFields reason={reason} handleReasonChange={handleReasonChange} />
-          )}
+          {response === ACCEPT && <MatchRatingField matchRating={matchRating} setMatchRating={setMatchRating} />}
+          {response === REJECT && <RejectFormFields reason={reason} handleReasonChange={handleReasonChange} />}
           <button type="submit" className="button">
             Submit
           </button>
@@ -60,16 +54,11 @@ function RejectFormFields({ reason, handleReasonChange }) {
   return (
     <>
       <p>
-        No problem! Can you let us know why you declined working with this student so we can do a
-        better job next time? Thank you!
+        No problem! Can you let us know why you declined working with this student so we can do a better job next time?
+        Thank you!
       </p>
       <label className="check">
-        <input
-          type="checkbox"
-          name="no_good_fit"
-          checked={Boolean(reason.no_good_fit)}
-          onChange={handleReasonChange}
-        />
+        <input type="checkbox" name="no_good_fit" checked={Boolean(reason.no_good_fit)} onChange={handleReasonChange} />
         Student did not seem like a good fit for me
       </label>
       <label className="check">
@@ -112,8 +101,7 @@ function RejectFormFields({ reason, handleReasonChange }) {
 function MatchRatingField({ matchRating, setMatchRating }) {
   return (
     <label className="field">
-      We are constantly improving how we match students to mentors. On a scale of 0–10, how would you
-      rate this match?
+      We are constantly improving how we match students to mentors. On a scale of 0–10, how would you rate this match?
       <select
         value={matchRating ?? ""}
         onChange={(event) => {
